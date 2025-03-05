@@ -8,7 +8,12 @@
 </head>
 <body>
 
-    <!-- Video -->
+    <!-- Live Clock (Bottom Right) -->
+    <div class="clock-container">
+        <span id="live-clock"></span>
+    </div>
+
+    <!-- Sky & Video -->
     <div class="sky" id="sky">
         <video id="bg-video" class="hidden">
             <source src="videos/intro_video.mp4" type="video/mp4">
@@ -26,18 +31,18 @@
         <div class="grass"></div> 
     </div>
 
-      <!-- Ai Propt: Yüzük ile Login menüsünü nasıl çalıştırırım ve fade animasyonu eklerim  -->
-
+    <!-- Ai Prompt: Yüzük ile Login menüsünü nasıl çalıştırırım ve fade animasyonu eklerim -->
 
     <!-- Login Box  -->
-    <div class="login-container hidden" id="login-container">
+    <div class="login-container hidden form-element" id="login-container">
         <input type="text" placeholder="Username">
         <input type="password" placeholder="Password">
         <button>Login</button>
     </div>
 
     <script>
-        let isRotated = false; // Ring rotation state
+        let isRotated = false;
+        let isFormHidden = false; // 'H' tuşunun durumunu takip et
 
         function toggleLoginAndVideo() {
             let video = document.getElementById("bg-video");
@@ -45,14 +50,15 @@
             let loginBox = document.getElementById("login-container");
             let sky = document.getElementById("sky");
 
+            // Eğer 'H' tuşu ile form gizlendiyse, açılmasını engelle
+            if (isFormHidden) return;
+
             if (!video.classList.contains("hidden")) {
                 video.pause();
                 video.classList.add("hidden");
 
-                
                 sky.style.backgroundImage = "url('images/background.png')";
 
-                
                 isRotated = false;
                 ring.style.transform = "rotateY(0deg)";
 
@@ -63,18 +69,13 @@
                     loginBox.classList.add("hidden");
                 }, 500);
             } else {
-                // Start the video and open the login box
                 video.classList.remove("hidden"); 
                 video.play().catch(error => {
                     console.log("Autoplay failed:", error);
                 });
 
-                // Ai Propt: Fotoğraf ve Video arasındaki geçişi nasıl yaparım ve animasyon bitince eski haline nasıl gelir 
-
-                // Remove the background image
                 sky.style.backgroundImage = "none";
 
-                // Rotate ring 
                 if (!isRotated) {
                     ring.style.transform = "rotateY(360deg)";
                     isRotated = true;
@@ -83,13 +84,34 @@
                 loginBox.classList.remove("hidden", "fade-out");
                 loginBox.classList.add("fade-in");
 
-                // When the video ends, bring back the background image
                 video.onended = function() {
                     video.classList.add("hidden");
-                    sky.style.backgroundImage = "url('images/background.png')"; // Restore image
+                    sky.style.backgroundImage = "url('images/background.png')";
                 };
             }
         }
+
+        // Update Live Clock
+        function updateClock() {
+            const now = new Date();
+            const hours = now.getHours().toString().padStart(2, '0');
+            const minutes = now.getMinutes().toString().padStart(2, '0');
+            const seconds = now.getSeconds().toString().padStart(2, '0');
+            document.getElementById('live-clock').innerText = `${hours}:${minutes}:${seconds}`;
+        }
+        setInterval(updateClock, 1000);
+        updateClock();
+
+        // Toggle Forms with 'H' Key (Fix Conflict with Ring)
+        document.addEventListener("keydown", function(event) {
+            if (event.key === "h" || event.key === "H") {
+                document.querySelectorAll(".form-element").forEach(form => {
+                    form.classList.toggle("hidden");
+                });
+
+                isFormHidden = !isFormHidden; // Gizlenme durumunu takip et
+            }
+        });
     </script>
 
 </body>
