@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Green Hill Zone</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- Video -->
+    <div class="sky" id="sky">
+        <video id="bg-video" class="hidden">
+            <source src="videos/intro_video.mp4" type="video/mp4">
+            Your browser does not support this video.
+        </video>
+
+        <!-- Ring  -->
+        <div class="ring-container">
+            <div class="ring" id="ring" onclick="toggleLoginAndVideo()"></div>
+        </div> 
+    </div>
+
+    <!-- Ground and Grass -->
+    <div class="ground">
+        <div class="grass"></div> 
+    </div>
+
+      <!-- Ai Propt: Yüzük ile Login menüsünü nasıl çalıştırırım ve fade animasyonu eklerim  -->
+
+
+    <!-- Login Box  -->
+    <div class="login-container hidden" id="login-container">
+        <input type="text" placeholder="Username">
+        <input type="password" placeholder="Password">
+        <button>Login</button>
+    </div>
+
+    <script>
+        let isRotated = false; // Ring rotation state
+
+        function toggleLoginAndVideo() {
+            let video = document.getElementById("bg-video");
+            let ring = document.getElementById("ring");
+            let loginBox = document.getElementById("login-container");
+            let sky = document.getElementById("sky");
+
+            if (!video.classList.contains("hidden")) {
+                video.pause();
+                video.classList.add("hidden");
+
+                
+                sky.style.backgroundImage = "url('images/background.png')";
+
+                
+                isRotated = false;
+                ring.style.transform = "rotateY(0deg)";
+
+                loginBox.classList.remove("fade-in");
+                loginBox.classList.add("fade-out");
+
+                setTimeout(() => {
+                    loginBox.classList.add("hidden");
+                }, 500);
+            } else {
+                // Start the video and open the login box
+                video.classList.remove("hidden"); 
+                video.play().catch(error => {
+                    console.log("Autoplay failed:", error);
+                });
+
+                // Ai Propt: Fotoğraf ve Video arasındaki geçişi nasıl yaparım ve animasyon bitince eski haline nasıl gelir 
+
+                // Remove the background image
+                sky.style.backgroundImage = "none";
+
+                // Rotate ring 
+                if (!isRotated) {
+                    ring.style.transform = "rotateY(360deg)";
+                    isRotated = true;
+                }
+
+                loginBox.classList.remove("hidden", "fade-out");
+                loginBox.classList.add("fade-in");
+
+                // When the video ends, bring back the background image
+                video.onended = function() {
+                    video.classList.add("hidden");
+                    sky.style.backgroundImage = "url('images/background.png')"; // Restore image
+                };
+            }
+        }
+    </script>
+
+</body>
+</html>

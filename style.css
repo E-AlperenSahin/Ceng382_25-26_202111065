@@ -1,0 +1,180 @@
+
+body {
+    margin: 0;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 100vh;
+}
+
+/* Sky */
+.sky {
+    width: 100%;
+    flex-grow: 1;
+    background: url('images/background.png') no-repeat center center;
+    background-size: cover;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+}
+
+/* Video */
+#bg-video {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/*  Video When Start  */
+.hidden {
+    display: none;
+}
+
+/* Ai Propt: Yüzük içini trasnparan nasıl yapabilirim */
+
+/* Ring  */
+.ring {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    background: none;
+    border: 10px solid gold; 
+    box-shadow: 0px 0px 20px rgba(255, 223, 0, 0.8), 
+                0px 0px 40px rgba(182, 182, 106, 0.5);
+    position: relative;
+    transition: transform 0.8s ease-in-out;
+    transform-origin: center;
+    cursor: pointer;
+}
+
+
+/* Ring Position */
+.ring-container {
+    position: absolute;
+    bottom: 8px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    perspective: 500px;
+}
+
+
+/* Ground */
+.ground {
+    width: 100%;
+    height: 250px;
+    background-color: #8B4513;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+}
+
+    /* Ai Propt: Çimen nasıl yapabilirim */
+
+/* Grass */
+.grass {
+    width: 100%;
+    height: 50px;
+    background: linear-gradient(to bottom, #00FF00, #008000);
+    position: absolute;
+    top: -50px;
+    clip-path: polygon(
+        0% 100%, 5% 80%, 10% 100%, 15% 80%, 20% 100%, 
+        25% 80%, 30% 100%, 35% 80%, 40% 100%, 45% 80%, 
+        50% 100%, 55% 80%, 60% 100%, 65% 80%, 70% 100%, 
+        75% 80%, 80% 100%, 85% 80%, 90% 100%, 95% 80%, 100% 100%
+    );
+}
+
+/* Login Box */
+.hidden {
+    display: none;
+}
+
+/* Fade-in Animation */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Fade-out Animation */
+@keyframes fadeOut {
+    from {
+        opacity: 1;
+        transform: translateY(0);
+    }
+    to {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+}
+
+/* Visible Login Box */
+.fade-in {
+    display: flex;
+    animation: fadeIn 0.5s forwards;
+}
+
+/* Hidden Login Box */
+.fade-out {
+    animation: fadeOut 0.5s forwards;
+}
+
+/* Login Box */
+.login-container {
+    position: absolute;
+    bottom: 20px;
+    width: 320px;
+    background-color: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
+    flex-direction: column;
+    align-items: center;
+    border: 2px solid black;
+}
+
+/* Input Fields */
+.login-container input {
+    width: 90%;
+    padding: 8px;
+    margin: 5px 0;
+    border: 2px solid black;
+    border-radius: 5px;
+    font-size: 16px;
+    text-align: center;
+    background-color: white;
+    color: black;
+}
+
+/* Login Button */
+.login-container button {
+    width: 95%;
+    padding: 10px;
+    margin-top: 10px;
+    border: none;
+    border-radius: 5px;
+    background-color: gold;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    box-shadow: 0px 0px 10px rgba(255, 223, 0, 0.8);
+    transition: 0.3s;
+}
+
+.login-container button:hover {
+    background-color: orange;
+    box-shadow: 0px 0px 20px rgba(255, 223, 0, 1);
+}
