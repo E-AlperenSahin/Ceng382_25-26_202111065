@@ -20,9 +20,9 @@
             Your browser does not support this video.
         </video>
 
-        <!-- Ring  -->
+        <!-- Ring (Only Controls Video & Background) -->
         <div class="ring-container">
-            <div class="ring" id="ring" onclick="toggleLoginAndVideo()"></div>
+            <div class="ring" id="ring" onclick="toggleVideo()"></div>
         </div> 
     </div>
 
@@ -31,7 +31,7 @@
         <div class="grass"></div> 
     </div>
 
-    <!-- Ai Prompt: Yüzük ile Login menüsünü nasıl çalıştırırım ve fade animasyonu eklerim -->
+    <!-- Ai Prompt: Yüzük sadece video ve arka planı değiştirsin, H tuşu login menüsünü açıp kapatsın -->
 
     <!-- Login Box  -->
     <div class="login-container hidden form-element" id="login-container">
@@ -42,32 +42,19 @@
 
     <script>
         let isRotated = false;
-        let isFormHidden = false; // 'H' tuşunun durumunu takip et
 
-        function toggleLoginAndVideo() {
+        // Yüzüğe tıklayınca sadece video ve arka plan değişsin
+        function toggleVideo() {
             let video = document.getElementById("bg-video");
             let ring = document.getElementById("ring");
-            let loginBox = document.getElementById("login-container");
             let sky = document.getElementById("sky");
-
-            // Eğer 'H' tuşu ile form gizlendiyse, açılmasını engelle
-            if (isFormHidden) return;
 
             if (!video.classList.contains("hidden")) {
                 video.pause();
                 video.classList.add("hidden");
-
                 sky.style.backgroundImage = "url('images/background.png')";
-
                 isRotated = false;
                 ring.style.transform = "rotateY(0deg)";
-
-                loginBox.classList.remove("fade-in");
-                loginBox.classList.add("fade-out");
-
-                setTimeout(() => {
-                    loginBox.classList.add("hidden");
-                }, 500);
             } else {
                 video.classList.remove("hidden"); 
                 video.play().catch(error => {
@@ -75,14 +62,10 @@
                 });
 
                 sky.style.backgroundImage = "none";
-
                 if (!isRotated) {
                     ring.style.transform = "rotateY(360deg)";
                     isRotated = true;
                 }
-
-                loginBox.classList.remove("hidden", "fade-out");
-                loginBox.classList.add("fade-in");
 
                 video.onended = function() {
                     video.classList.add("hidden");
@@ -90,6 +73,25 @@
                 };
             }
         }
+
+        // 'H' tuşuna basınca sadece login paneli aç/kapat
+        document.addEventListener("keydown", function(event) {
+            if (event.key === "h" || event.key === "H") {
+                let loginBox = document.getElementById("login-container");
+
+                if (loginBox.classList.contains("hidden")) {
+                    loginBox.classList.remove("hidden", "fade-out");
+                    loginBox.classList.add("fade-in");
+                } else {
+                    loginBox.classList.remove("fade-in");
+                    loginBox.classList.add("fade-out");
+
+                    setTimeout(() => {
+                        loginBox.classList.add("hidden");
+                    }, 500);
+                }
+            }
+        });
 
         // Update Live Clock
         function updateClock() {
@@ -101,17 +103,6 @@
         }
         setInterval(updateClock, 1000);
         updateClock();
-
-        // Toggle Forms with 'H' Key (Fix Conflict with Ring)
-        document.addEventListener("keydown", function(event) {
-            if (event.key === "h" || event.key === "H") {
-                document.querySelectorAll(".form-element").forEach(form => {
-                    form.classList.toggle("hidden");
-                });
-
-                isFormHidden = !isFormHidden; // Gizlenme durumunu takip et
-            }
-        });
     </script>
 
 </body>

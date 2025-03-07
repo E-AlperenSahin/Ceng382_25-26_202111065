@@ -1,4 +1,4 @@
-
+/* General Settings */
 body {
     margin: 0;
     overflow: hidden;
@@ -6,6 +6,7 @@ body {
     flex-direction: column;
     align-items: center;
     height: 100vh;
+    font-family: Arial, sans-serif;
 }
 
 /* Sky */
@@ -28,30 +29,12 @@ body {
     object-fit: cover;
 }
 
-/*  Video When Start  */
+/* Initially Hide Video */
 .hidden {
     display: none;
 }
 
-/* Ai Propt: Yüzük içini trasnparan nasıl yapabilirim */
-
-/* Ring  */
-.ring {
-    width: 100px;
-    height: 100px;
-    border-radius: 50%;
-    background: none;
-    border: 10px solid gold; 
-    box-shadow: 0px 0px 20px rgba(255, 223, 0, 0.8), 
-                0px 0px 40px rgba(182, 182, 106, 0.5);
-    position: relative;
-    transition: transform 0.8s ease-in-out;
-    transform-origin: center;
-    cursor: pointer;
-}
-
-
-/* Ring Position */
+/* Ring Container */
 .ring-container {
     position: absolute;
     bottom: 8px;
@@ -63,6 +46,33 @@ body {
     perspective: 500px;
 }
 
+/* Ring (Transparent Inside) */
+.ring {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    background: none;
+    border: 10px solid gold; /* Golden Ring */
+    box-shadow: 0px 0px 20px rgba(255, 223, 0, 0.8), 
+                0px 0px 40px rgba(255, 255, 0, 0.5);
+    position: relative;
+    transition: transform 0.8s ease-in-out;
+    transform-origin: center;
+    cursor: pointer;
+}
+
+/* Ring Inner Part (Fully Transparent) */
+.ring::before {
+    content: "";
+    position: absolute;
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background: none;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
 
 /* Ground */
 .ground {
@@ -74,8 +84,6 @@ body {
     justify-content: center;
     align-items: flex-start;
 }
-
-    /* Ai Propt: Çimen nasıl yapabilirim */
 
 /* Grass */
 .grass {
@@ -92,45 +100,23 @@ body {
     );
 }
 
-/* Login Box  */
-.hidden {
-    display: none;
+/* Live Clock (Bottom Right on Grass) */
+.clock-container {
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    font-size: 20px;
+    font-weight: bold;
+    color: rgb(0, 26, 255);
+    background-color: rgba(0, 0, 0, 0.7);
+    padding: 10px 15px;
+    border-radius: 8px;
+    font-family: inherit;
+    box-shadow: 0px 0px 10px rgba(50, 50, 49, 0.8);
+    z-index: 10; /* Keep it above other elements */
 }
 
-/* Fade-in Animation */
-@keyframes fadeIn {
-    from {
-        opacity: 0;
-        transform: translateY(10px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-/* Fade-out Animation */
-@keyframes fadeOut {
-    from {
-        opacity: 1;
-        transform: translateY(0);
-    }
-    to {
-        opacity: 0;
-        transform: translateY(10px);
-    }
-}
-
-/* Visible Login Box */
-.fade-in {
-    display: flex;
-    animation: fadeIn 0.5s forwards;
-}
-
-/* Hidden Login Box */
-.fade-out {
-    animation: fadeOut 0.5s forwards;
-}
+/* Ai Prompt: Login kutusunun fade animasyonu nasıl eklerim? */
 
 /* Login Box */
 .login-container {
@@ -179,18 +165,30 @@ body {
     box-shadow: 0px 0px 20px rgba(255, 223, 0, 1);
 }
 
-/* Live Clock (Bottom Right on Grass) */
-.clock-container {
-    position: absolute;
-    bottom: 10px; /* Move to the bottom */
-    right: 10px; /* Move to the right */
-    font-size: 20px;
-    font-weight: bold;
-    color: rgb(240, 15, 15);
-    background-color: rgba(0, 0, 0, 0.7);
-    padding: 10px 15px;
-    border-radius: 8px;
-    font-family: inherit;
-    box-shadow: 0px 0px 10px rgba(252, 154, 6, 0.8);
-    z-index: 10; /* Keep it above other elements */
+/* Fade-in Animation */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Fade-out Animation */
+@keyframes fadeOut {
+    from { opacity: 1; transform: translateY(0); }
+    to { opacity: 0; transform: translateY(10px); }
+}
+
+/* Visible Login Box */
+.fade-in {
+    display: flex;
+    animation: fadeIn 0.5s forwards;
+}
+
+/* Hidden Login Box */
+.fade-out {
+    animation: fadeOut 0.5s forwards;
+}
+
+/* Initially Hidden */
+.hidden {
+    display: none;
 }
