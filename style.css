@@ -46,7 +46,7 @@ body {
     perspective: 500px;
 }
 
-/* Ring (Transparent Inside) */
+/* Ring*/
 .ring {
     width: 100px;
     height: 100px;
@@ -61,7 +61,7 @@ body {
     cursor: pointer;
 }
 
-/* Ring Inner Part (Fully Transparent) */
+/* Ring Inner Part*/
 .ring::before {
     content: "";
     position: absolute;
@@ -100,7 +100,7 @@ body {
     );
 }
 
-/* Live Clock (Bottom Right on Grass) */
+/* Live Clock*/
 .clock-container {
     position: absolute;
     bottom: 10px;

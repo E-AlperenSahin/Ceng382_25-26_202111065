@@ -35,15 +35,16 @@
 
     <!-- Login Box  -->
     <div class="login-container hidden form-element" id="login-container">
-        <input type="text" placeholder="Username">
-        <input type="password" placeholder="Password">
-        <button>Login</button>
+        <input type="text" id="username" placeholder="Username">
+        <input type="password" id="password" placeholder="Password">
+        <button id="login-button">Login</button>
     </div>
 
     <script>
         let isRotated = false;
+        let loginAttempts = []; // Array to store login data
 
-        // Yüzüğe tıklayınca sadece video ve arka plan değişsin
+        
         function toggleVideo() {
             let video = document.getElementById("bg-video");
             let ring = document.getElementById("ring");
@@ -74,7 +75,7 @@
             }
         }
 
-        // 'H' tuşuna basınca sadece login paneli aç/kapat
+        // 'H' function 
         document.addEventListener("keydown", function(event) {
             if (event.key === "h" || event.key === "H") {
                 let loginBox = document.getElementById("login-container");
@@ -93,6 +94,22 @@
             }
         });
 
+        // Login  
+        function handleLogin() {
+            let username = document.getElementById("username").value;
+            let password = document.getElementById("password").value;
+
+            if (username && password) {
+                // Store username and password in the array
+                loginAttempts.push({ username, password });
+
+                // Print all stored login attempts to the console
+                console.log("Login Attempts:", loginAttempts);
+            } else {
+                console.log("Please enter both username and password.");
+            }
+        }
+
         // Update Live Clock
         function updateClock() {
             const now = new Date();
@@ -103,6 +120,14 @@
         }
         setInterval(updateClock, 1000);
         updateClock();
+
+        // Attach event listener to login button
+        document.addEventListener("DOMContentLoaded", function () {
+            let loginButton = document.getElementById("login-button");
+            if (loginButton) {
+                loginButton.addEventListener("click", handleLogin);
+            }
+        });
     </script>
 
 </body>
