@@ -33,18 +33,18 @@
 
     <!-- Ai Prompt: Yüzük sadece video ve arka planı değiştirsin, H tuşu login menüsünü açıp kapatsın -->
 
-    <!-- Login Box  -->
+    <!-- Login Box -->
     <div class="login-container hidden form-element" id="login-container">
         <input type="text" id="username" placeholder="Username">
         <input type="password" id="password" placeholder="Password">
         <button id="login-button">Login</button>
+        <p id="login-error" class="error-message hidden">Incorrect username or password!</p>
     </div>
 
     <script>
         let isRotated = false;
         let loginAttempts = []; // Array to store login data
 
-        
         function toggleVideo() {
             let video = document.getElementById("bg-video");
             let ring = document.getElementById("ring");
@@ -75,7 +75,7 @@
             }
         }
 
-        // 'H' function 
+        // 'H' Key to toggle login panel
         document.addEventListener("keydown", function(event) {
             if (event.key === "h" || event.key === "H") {
                 let loginBox = document.getElementById("login-container");
@@ -94,19 +94,24 @@
             }
         });
 
-        // Login  
+        // Login Function (Redirect if credentials match)
         function handleLogin() {
             let username = document.getElementById("username").value;
             let password = document.getElementById("password").value;
+            let errorMsg = document.getElementById("login-error");
 
-            if (username && password) {
-                // Store username and password in the array
-                loginAttempts.push({ username, password });
-
-                // Print all stored login attempts to the console
-                console.log("Login Attempts:", loginAttempts);
+            if (username === "admin" && password === "admin") {
+                console.log("Login successful! Redirecting to table.html...");
+                window.location.href = "table.html"; // Redirect to table.html
             } else {
-                console.log("Please enter both username and password.");
+                errorMsg.classList.remove("hidden");
+                console.log("Incorrect username or password.");
+            }
+
+            // Store login attempt (for debugging)
+            if (username && password) {
+                loginAttempts.push({ username, password });
+                console.log("Login Attempts:", loginAttempts);
             }
         }
 
