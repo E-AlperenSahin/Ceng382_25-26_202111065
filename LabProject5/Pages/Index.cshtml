@@ -5,44 +5,55 @@
 }
 
 <div class="container mt-4">
-    <div class="row">
-        <!-- Sol tarafta Form -->
-        <div class="col-md-5">
-            <h4>@(Model.IsEditMode ? "Edit Class" : "Add Class")</h4>
-            <form method="post" asp-page-handler="@(Model.IsEditMode ? "Edit" : "Add")">
+
+
+    <div class="card mb-4" style="background-color: #b3b2bc;">
+        <div class="card-body">
+
+            <form method="get">
+                <div class="input-group mb-3">
+                    <input type="text" name="SearchKeyword" value="@Model.SearchKeyword" class="form-control"
+                        placeholder="🔍 Search by class name or description..." />
+                    <button class="btn btn-primary" type="submit">Filter</button>
+                </div>
+            </form>
+
+
+            <hr />
+
+
+            <form method="post" asp-page-handler="@(Model.IsEditMode ? "Edit" : "Add")" class="row g-3 mt-2">
                 <input type="hidden" asp-for="ClassInput.Id" />
 
-                <div class="form-group mb-2">
-                    <label asp-for="ClassInput.ClassName"></label>
-                    <input asp-for="ClassInput.ClassName" class="form-control" />
+                <div class="col-md-4">
+                    <input asp-for="ClassInput.ClassName" class="form-control" placeholder="Class Name" />
                     <span asp-validation-for="ClassInput.ClassName" class="text-danger"></span>
                 </div>
-
-                <div class="form-group mb-2">
-                    <label asp-for="ClassInput.StudentCount"></label>
-                    <input asp-for="ClassInput.StudentCount" class="form-control" />
+                <div class="col-md-4">
+                    <input asp-for="ClassInput.StudentCount" class="form-control" placeholder="Student Count" />
                     <span asp-validation-for="ClassInput.StudentCount" class="text-danger"></span>
                 </div>
-
-                <div class="form-group mb-3">
-                    <label asp-for="ClassInput.Description"></label>
-                    <textarea asp-for="ClassInput.Description" class="form-control"></textarea>
+                <div class="col-md-4">
+                    <input asp-for="ClassInput.Description" class="form-control" placeholder="Description" />
                     <span asp-validation-for="ClassInput.Description" class="text-danger"></span>
                 </div>
 
-                <button type="submit" class="btn btn-primary">
-                    @(Model.IsEditMode ? "Update" : "Add Class")
-                </button>
+                <div class="col-12">
+                    <button type="submit" class="btn btn-primary">
+                        @(Model.IsEditMode ? "Update Class" : "Add Class")
+                    </button>
+                </div>
             </form>
         </div>
+    </div>
 
-        <!-- Sağ tarafta Tablo -->
-        <div class="col-md-7">
+
+    <div class="row">
+        <div class="col-12">
             <h4>Class List</h4>
             <table class="table table-bordered table-striped">
                 <thead class="table-dark">
                     <tr>
-                        <th>Id</th>
                         <th>Class Name</th>
                         <th>Student Count</th>
                         <th>Description</th>
@@ -50,29 +61,44 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach (var item in LabProject5.Pages.IndexModel.ClassList)
+                    @foreach (var item in Model.FilteredClassList)
                     {
                         <tr>
-                            <td>@item.Id</td>
                             <td>@item.ClassName</td>
                             <td>@item.StudentCount</td>
                             <td>@item.Description</td>
                             <td>
                                 <form method="post" class="d-inline">
                                     <input type="hidden" name="id" value="@item.Id" />
-                                    <button type="submit" asp-page-handler="Edit"
-                                        class="btn btn-sm btn-warning">Edit</button>
+                                    <button type="submit" asp-page-handler="EditSelect" class="btn btn-sm btn-warning"
+                                        title="Edit">
+                                        <img src="~/images/pencil.svg" alt="Edit" width="16" height="16" />
+                                    </button>
                                 </form>
                                 <form method="post" class="d-inline">
                                     <input type="hidden" name="id" value="@item.Id" />
-                                    <button type="submit" asp-page-handler="Delete"
-                                        class="btn btn-sm btn-danger">Delete</button>
+                                    <button type="submit" asp-page-handler="Delete" class="btn btn-sm btn-danger"
+                                        title="Delete">
+                                        <img src="~/images/trash.svg" alt="Delete" width="16" height="16" />
+                                    </button>
                                 </form>
                             </td>
                         </tr>
                     }
                 </tbody>
             </table>
+
+
+            <nav>
+                <ul class="pagination">
+                    @for (int i = 1; i <= Model.TotalPages; i++)
+                    {
+                        <li class="page-item @(i == Model.PageNumber ? "active" : "")">
+                            <a class="page-link" href="?SearchKeyword=@Model.SearchKeyword&PageNumber=@i">@i</a>
+                        </li>
+                    }
+                </ul>
+            </nav>
         </div>
     </div>
 </div>

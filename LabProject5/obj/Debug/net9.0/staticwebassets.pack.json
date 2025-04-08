@@ -13,6 +13,14 @@
       "PackagePath": "staticwebassets\\favicon.ico"
     },
     {
+      "Id": "C:\\Users\\AAlpe\\OneDrive\\Masaüstü\\ceng382\\Ceng382_25-26_202111065\\LabProject5\\wwwroot\\images\\pencil.svg",
+      "PackagePath": "staticwebassets\\images\\pencil.svg"
+    },
+    {
+      "Id": "C:\\Users\\AAlpe\\OneDrive\\Masaüstü\\ceng382\\Ceng382_25-26_202111065\\LabProject5\\wwwroot\\images\\trash.svg",
+      "PackagePath": "staticwebassets\\images\\trash.svg"
+    },
+    {
       "Id": "C:\\Users\\AAlpe\\OneDrive\\Masaüstü\\ceng382\\Ceng382_25-26_202111065\\LabProject5\\wwwroot\\js\\site.js",
       "PackagePath": "staticwebassets\\js\\site.js"
     },
