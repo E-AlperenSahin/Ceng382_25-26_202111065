@@ -6,25 +6,21 @@
 
 <div class="container mt-4">
 
-
+    
     <div class="card mb-4" style="background-color: #b3b2bc;">
         <div class="card-body">
 
-            <form method="get">
-                <div class="input-group mb-3">
+            <form method="get" class="mb-3">
+                <div class="input-group">
                     <input type="text" name="SearchKeyword" value="@Model.SearchKeyword" class="form-control"
                         placeholder="🔍 Search by class name or description..." />
                     <button class="btn btn-primary" type="submit">Filter</button>
                 </div>
             </form>
 
-
-            <hr />
-
-
-            <form method="post" asp-page-handler="@(Model.IsEditMode ? "Edit" : "Add")" class="row g-3 mt-2">
+            
+            <form method="post" asp-page-handler="@(Model.IsEditMode ? "Edit" : "Add")" class="row g-3 mb-3">
                 <input type="hidden" asp-for="ClassInput.Id" />
-
                 <div class="col-md-4">
                     <input asp-for="ClassInput.ClassName" class="form-control" placeholder="Class Name" />
                     <span asp-validation-for="ClassInput.ClassName" class="text-danger"></span>
@@ -37,17 +33,37 @@
                     <input asp-for="ClassInput.Description" class="form-control" placeholder="Description" />
                     <span asp-validation-for="ClassInput.Description" class="text-danger"></span>
                 </div>
-
-                <div class="col-12">
-                    <button type="submit" class="btn btn-primary">
-                        @(Model.IsEditMode ? "Update Class" : "Add Class")
-                    </button>
+                <div class="col-12 text-end">
+                    <button type="submit" class="btn btn-primary">Add Class</button>
                 </div>
             </form>
+
+        <!-- Ai Prompt : Listeyi Json Dosyasına Export Nasıl Yaparım -->
+
+            <!-- 📤 Export to JSON -->
+            <form method="post" asp-page-handler="ExportJson">
+                <div class="mb-2 fw-bold">Select Columns</div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="checkbox" name="SelectedColumns" value="ClassName" id="col1" />
+                    <label class="form-check-label" for="col1">Class Name</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="checkbox" name="SelectedColumns" value="StudentCount" id="col2" />
+                    <label class="form-check-label" for="col2">Student Count</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="checkbox" name="SelectedColumns" value="Description" id="col3" />
+                    <label class="form-check-label" for="col3">Description</label>
+                </div>
+                <div class="mt-2">
+                    <button type="submit" class="btn btn-success">Export to JSON</button>
+                </div>
+            </form>
+
         </div>
     </div>
 
-
+    
     <div class="row">
         <div class="col-12">
             <h4>Class List</h4>
@@ -70,15 +86,13 @@
                             <td>
                                 <form method="post" class="d-inline">
                                     <input type="hidden" name="id" value="@item.Id" />
-                                    <button type="submit" asp-page-handler="EditSelect" class="btn btn-sm btn-warning"
-                                        title="Edit">
+                                    <button type="submit" asp-page-handler="EditSelect" class="btn btn-sm btn-warning" title="Edit">
                                         <img src="~/images/pencil.svg" alt="Edit" width="16" height="16" />
                                     </button>
                                 </form>
                                 <form method="post" class="d-inline">
                                     <input type="hidden" name="id" value="@item.Id" />
-                                    <button type="submit" asp-page-handler="Delete" class="btn btn-sm btn-danger"
-                                        title="Delete">
+                                    <button type="submit" asp-page-handler="Delete" class="btn btn-sm btn-danger" title="Delete">
                                         <img src="~/images/trash.svg" alt="Delete" width="16" height="16" />
                                     </button>
                                 </form>
@@ -88,7 +102,9 @@
                 </tbody>
             </table>
 
+    <!-- Ai Prompt : Pagination Kısmı Naıl Yapıllır  -->
 
+            <!-- 📄 Pagination -->
             <nav>
                 <ul class="pagination">
                     @for (int i = 1; i <= Model.TotalPages; i++)

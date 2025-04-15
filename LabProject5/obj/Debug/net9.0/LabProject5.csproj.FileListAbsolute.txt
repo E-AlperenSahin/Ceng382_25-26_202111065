@@ -20,6 +20,8 @@ C:\Users\AAlpe\OneDrive\Masaüstü\ceng382\Ceng382_25-26_202111065\LabProject5\o
 C:\Users\AAlpe\OneDrive\Masaüstü\ceng382\Ceng382_25-26_202111065\LabProject5\obj\Debug\net9.0\scopedcss\projectbundle\LabProject5.bundle.scp.css
 C:\Users\AAlpe\OneDrive\Masaüstü\ceng382\Ceng382_25-26_202111065\LabProject5\obj\Debug\net9.0\compressed\llvuqcbbs1-b9sayid5wm.gz
 C:\Users\AAlpe\OneDrive\Masaüstü\ceng382\Ceng382_25-26_202111065\LabProject5\obj\Debug\net9.0\compressed\qm0ghc92c6-61n19gt1b8.gz
+C:\Users\AAlpe\OneDrive\Masaüstü\ceng382\Ceng382_25-26_202111065\LabProject5\obj\Debug\net9.0\compressed\uhsb0nen90-3hx8jh4ybi.gz
+C:\Users\AAlpe\OneDrive\Masaüstü\ceng382\Ceng382_25-26_202111065\LabProject5\obj\Debug\net9.0\compressed\7oy87nakyx-rnr89wl30t.gz
 C:\Users\AAlpe\OneDrive\Masaüstü\ceng382\Ceng382_25-26_202111065\LabProject5\obj\Debug\net9.0\compressed\kuiprx5r0u-xtxxf3hu2r.gz
 C:\Users\AAlpe\OneDrive\Masaüstü\ceng382\Ceng382_25-26_202111065\LabProject5\obj\Debug\net9.0\compressed\cfbekhq1pl-bqjiyaj88i.gz
 C:\Users\AAlpe\OneDrive\Masaüstü\ceng382\Ceng382_25-26_202111065\LabProject5\obj\Debug\net9.0\compressed\1fo3vsqr3a-c2jlpeoesf.gz
@@ -96,5 +98,3 @@ C:\Users\AAlpe\OneDrive\Masaüstü\ceng382\Ceng382_25-26_202111065\LabProject5\o
 C:\Users\AAlpe\OneDrive\Masaüstü\ceng382\Ceng382_25-26_202111065\LabProject5\obj\Debug\net9.0\LabProject5.pdb
 C:\Users\AAlpe\OneDrive\Masaüstü\ceng382\Ceng382_25-26_202111065\LabProject5\obj\Debug\net9.0\LabProject5.genruntimeconfig.cache
 C:\Users\AAlpe\OneDrive\Masaüstü\ceng382\Ceng382_25-26_202111065\LabProject5\obj\Debug\net9.0\ref\LabProject5.dll
-C:\Users\AAlpe\OneDrive\Masaüstü\ceng382\Ceng382_25-26_202111065\LabProject5\obj\Debug\net9.0\compressed\uhsb0nen90-3hx8jh4ybi.gz
-C:\Users\AAlpe\OneDrive\Masaüstü\ceng382\Ceng382_25-26_202111065\LabProject5\obj\Debug\net9.0\compressed\7oy87nakyx-rnr89wl30t.gz

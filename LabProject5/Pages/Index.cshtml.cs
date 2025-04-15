@@ -1,8 +1,10 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using LabProject5.Models;
+using LabProject5.Helpers;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 
 namespace LabProject5.Pages
 {
@@ -15,28 +17,23 @@ namespace LabProject5.Pages
             _logger = logger;
         }
 
-
+        //  Ai Prompt :Bellekte Tutma nasıl yapılır
         public static List<ClassInformationModel> ClassList { get; set; } = new();
-
 
         [BindProperty]
         public ClassInformationModel ClassInput { get; set; } = new();
-
 
         public List<ClassInformationTable> FilteredClassList { get; set; } = new();
 
         public bool IsEditMode { get; set; } = false;
 
-
         [BindProperty(SupportsGet = true)]
         public string? SearchKeyword { get; set; }
-
 
         [BindProperty(SupportsGet = true)]
         public int PageNumber { get; set; } = 1;
         public int PageSize { get; set; } = 10;
         public int TotalPages { get; set; }
-
 
         private static bool _isDataGenerated = false;
 
@@ -60,9 +57,7 @@ namespace LabProject5.Pages
 
         public void OnGet()
         {
-
             GenerateDummyData();
-
 
             var query = ClassList.AsQueryable();
 
@@ -73,10 +68,8 @@ namespace LabProject5.Pages
                     c.Description.Contains(SearchKeyword, System.StringComparison.OrdinalIgnoreCase));
             }
 
-
             int totalItems = query.Count();
             TotalPages = (int)System.Math.Ceiling(totalItems / (double)PageSize);
-
 
             FilteredClassList = query
                 .Skip((PageNumber - 1) * PageSize)
@@ -106,7 +99,6 @@ namespace LabProject5.Pages
             return RedirectToPage(new { PageNumber = PageNumber, SearchKeyword = SearchKeyword });
         }
 
-        // Satırdan seçmek için
         public IActionResult OnPostEditSelect(int id)
         {
             var existing = ClassList.FirstOrDefault(c => c.Id == id);
@@ -117,7 +109,6 @@ namespace LabProject5.Pages
             IsEditMode = true;
             return Page();
         }
-
 
         public IActionResult OnPostEdit()
         {
@@ -140,5 +131,35 @@ namespace LabProject5.Pages
 
             return RedirectToPage(new { PageNumber = PageNumber, SearchKeyword = SearchKeyword });
         }
+        // Ai Prompt Export Devamı
+
+
+        // 📤 JSON Export
+        public IActionResult OnPostExportJson(List<string> SelectedColumns)
+        {
+            
+            var query = ClassList.AsQueryable();
+
+            if (!string.IsNullOrWhiteSpace(SearchKeyword))
+            {
+                query = query.Where(c =>
+                    c.ClassName.Contains(SearchKeyword, StringComparison.OrdinalIgnoreCase) ||
+                    c.Description.Contains(SearchKeyword, StringComparison.OrdinalIgnoreCase));
+            }
+
+            
+            var dataToExport = query
+                .Skip((PageNumber - 1) * PageSize)
+                .Take(PageSize)
+                .ToList();
+
+            
+            string json = Utils.Instance.ExportToJson(dataToExport, SelectedColumns);
+            var bytes = Encoding.UTF8.GetBytes(json);
+
+            return File(bytes, "application/json", $"current-page-p{PageNumber}.json");
+        }
+
+
     }
 }

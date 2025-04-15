@@ -11,7 +11,8 @@ namespace LabProject5.Models
             Id = _nextId++;
         }
 
-        public int Id { get; private set; }
+        public int Id { get; set; }
+
 
         [Required]
         public string ClassName { get; set; }
