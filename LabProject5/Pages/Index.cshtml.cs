@@ -17,7 +17,6 @@ namespace LabProject5.Pages
             _logger = logger;
         }
 
-        //  Ai Prompt :Bellekte Tutma nasıl yapılır
         public static List<ClassInformationModel> ClassList { get; set; } = new();
 
         [BindProperty]
@@ -32,6 +31,7 @@ namespace LabProject5.Pages
 
         [BindProperty(SupportsGet = true)]
         public int PageNumber { get; set; } = 1;
+
         public int PageSize { get; set; } = 10;
         public int TotalPages { get; set; }
 
@@ -55,8 +55,33 @@ namespace LabProject5.Pages
             _isDataGenerated = true;
         }
 
-        public void OnGet()
+        public IActionResult OnGet()
         {
+            // Ai prompt: Giriş Kontrolü Nasıl Yapılır
+            var sessionUsername = HttpContext.Session.GetString("username");
+            var sessionToken = HttpContext.Session.GetString("token");
+            var sessionId = HttpContext.Session.GetString("session_id");
+            var cookieUsername = Request.Cookies["username"];
+            var cookieToken = Request.Cookies["token"];
+            var cookieSessionId = Request.Cookies["session_id"];
+
+            if (string.IsNullOrEmpty(sessionUsername) ||
+                string.IsNullOrEmpty(sessionToken) ||
+                string.IsNullOrEmpty(sessionId) ||
+                string.IsNullOrEmpty(cookieUsername) ||
+                string.IsNullOrEmpty(cookieToken) ||
+                string.IsNullOrEmpty(cookieSessionId) ||
+                sessionUsername != cookieUsername ||
+                sessionToken != cookieToken ||
+                sessionId != cookieSessionId)
+            {
+                HttpContext.Session.Clear();
+                Response.Cookies.Delete("username");
+                Response.Cookies.Delete("token");
+                Response.Cookies.Delete("session_id");
+                return RedirectToPage("/Login", new { error = "notauthorized" });
+            }
+
             GenerateDummyData();
 
             var query = ClassList.AsQueryable();
@@ -64,12 +89,12 @@ namespace LabProject5.Pages
             if (!string.IsNullOrWhiteSpace(SearchKeyword))
             {
                 query = query.Where(c =>
-                    c.ClassName.Contains(SearchKeyword, System.StringComparison.OrdinalIgnoreCase) ||
-                    c.Description.Contains(SearchKeyword, System.StringComparison.OrdinalIgnoreCase));
+                    c.ClassName.Contains(SearchKeyword, StringComparison.OrdinalIgnoreCase) ||
+                    c.Description.Contains(SearchKeyword, StringComparison.OrdinalIgnoreCase));
             }
 
             int totalItems = query.Count();
-            TotalPages = (int)System.Math.Ceiling(totalItems / (double)PageSize);
+            TotalPages = (int)Math.Ceiling(totalItems / (double)PageSize);
 
             FilteredClassList = query
                 .Skip((PageNumber - 1) * PageSize)
@@ -82,6 +107,8 @@ namespace LabProject5.Pages
                     Description = c.Description
                 })
                 .ToList();
+
+            return Page();
         }
 
         public IActionResult OnPostAdd()
@@ -96,7 +123,7 @@ namespace LabProject5.Pages
                 Description = ClassInput.Description
             });
 
-            return RedirectToPage(new { PageNumber = PageNumber, SearchKeyword = SearchKeyword });
+            return RedirectToPage(new { PageNumber, SearchKeyword });
         }
 
         public IActionResult OnPostEditSelect(int id)
@@ -120,7 +147,7 @@ namespace LabProject5.Pages
                 existing.Description = ClassInput.Description;
             }
 
-            return RedirectToPage(new { PageNumber = PageNumber, SearchKeyword = SearchKeyword });
+            return RedirectToPage(new { PageNumber, SearchKeyword });
         }
 
         public IActionResult OnPostDelete(int id)
@@ -129,15 +156,17 @@ namespace LabProject5.Pages
             if (item != null)
                 ClassList.Remove(item);
 
-            return RedirectToPage(new { PageNumber = PageNumber, SearchKeyword = SearchKeyword });
+            return RedirectToPage(new { PageNumber, SearchKeyword });
         }
-        // Ai Prompt Export Devamı
 
 
-        // 📤 JSON Export
-        public IActionResult OnPostExportJson(List<string> SelectedColumns)
+        public IActionResult OnPostExportJson(string SelectedColumns)
         {
-            
+            // Ai prompt: Kolonları Aktif Olarak Nasıl Kullanıbilirim
+            var columns = string.IsNullOrWhiteSpace(SelectedColumns)
+                ? new List<string>()
+                : SelectedColumns.Split(',').ToList();
+
             var query = ClassList.AsQueryable();
 
             if (!string.IsNullOrWhiteSpace(SearchKeyword))
@@ -147,19 +176,26 @@ namespace LabProject5.Pages
                     c.Description.Contains(SearchKeyword, StringComparison.OrdinalIgnoreCase));
             }
 
-            
             var dataToExport = query
                 .Skip((PageNumber - 1) * PageSize)
                 .Take(PageSize)
                 .ToList();
 
-            
-            string json = Utils.Instance.ExportToJson(dataToExport, SelectedColumns);
+            string json = Utils.Instance.ExportToJson(dataToExport, columns);
             var bytes = Encoding.UTF8.GetBytes(json);
 
             return File(bytes, "application/json", $"current-page-p{PageNumber}.json");
         }
 
 
+        // Ai prompt: Logout Bölümü nasıl yaparım
+        public IActionResult OnPostLogout()
+        {
+            HttpContext.Session.Clear();
+            Response.Cookies.Delete("username");
+            Response.Cookies.Delete("token");
+            Response.Cookies.Delete("session_id");
+            return RedirectToPage("/Login");
+        }
     }
 }

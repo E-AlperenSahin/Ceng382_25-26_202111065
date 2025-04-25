@@ -98,3 +98,4 @@ C:\Users\AAlpe\OneDrive\Masaüstü\ceng382\Ceng382_25-26_202111065\LabProject5\o
 C:\Users\AAlpe\OneDrive\Masaüstü\ceng382\Ceng382_25-26_202111065\LabProject5\obj\Debug\net9.0\LabProject5.pdb
 C:\Users\AAlpe\OneDrive\Masaüstü\ceng382\Ceng382_25-26_202111065\LabProject5\obj\Debug\net9.0\LabProject5.genruntimeconfig.cache
 C:\Users\AAlpe\OneDrive\Masaüstü\ceng382\Ceng382_25-26_202111065\LabProject5\obj\Debug\net9.0\ref\LabProject5.dll
+C:\Users\AAlpe\OneDrive\Masaüstü\ceng382\Ceng382_25-26_202111065\LabProject5\obj\Debug\net9.0\compressed\wylm5gzaib-xuj0vz3qd8.gz

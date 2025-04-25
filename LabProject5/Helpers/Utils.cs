@@ -27,7 +27,8 @@ namespace LabProject5.Helpers
                 {
                     if (selectedColumns.Contains(prop.Name))
                     {
-                        obj[prop.Name] = prop.GetValue(item);
+                        obj[prop.Name] = prop.GetValue(item) ?? "";
+
                     }
                 }
                 return obj;

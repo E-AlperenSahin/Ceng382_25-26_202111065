@@ -6,10 +6,25 @@
 
 <div class="container mt-4">
 
-    
+    <!-- Ai Prompt : Session Bilgileri ile Logout Nasıl Yaparım -->
+    @if (HttpContext.Session.GetString("username") != null)
+    {
+        <div class="alert alert-info d-flex justify-content-between align-items-center">
+            <div>
+                <strong>Logged in as:</strong> @HttpContext.Session.GetString("username") <br />
+                <strong>Token:</strong> @HttpContext.Session.GetString("token") <br />
+                <strong>Session ID:</strong> @HttpContext.Session.GetString("session_id")
+            </div>
+            <form method="post" asp-page-handler="Logout" class="ms-3 mb-0">
+                <button type="submit" class="btn btn-danger btn-sm">Logout</button>
+            </form>
+        </div>
+    }
+
     <div class="card mb-4" style="background-color: #b3b2bc;">
         <div class="card-body">
 
+            <!-- Ai Prompt : Filter Kısmı Nasıl Yapılır -->
             <form method="get" class="mb-3">
                 <div class="input-group">
                     <input type="text" name="SearchKeyword" value="@Model.SearchKeyword" class="form-control"
@@ -18,7 +33,7 @@
                 </div>
             </form>
 
-            
+            <!-- Ai Prompt : Class Ekleme ve Edit Kısmı Nasıl Yapılır -->
             <form method="post" asp-page-handler="@(Model.IsEditMode ? "Edit" : "Add")" class="row g-3 mb-3">
                 <input type="hidden" asp-for="ClassInput.Id" />
                 <div class="col-md-4">
@@ -34,45 +49,31 @@
                     <span asp-validation-for="ClassInput.Description" class="text-danger"></span>
                 </div>
                 <div class="col-12 text-end">
-                    <button type="submit" class="btn btn-primary">Add Class</button>
+                    <button type="submit" class="btn btn-primary">
+                        @(Model.IsEditMode ? "Update Class" : "Add Class")
+                    </button>
                 </div>
             </form>
 
-        <!-- Ai Prompt : Listeyi Json Dosyasına Export Nasıl Yaparım -->
-
-            <!-- 📤 Export to JSON -->
-            <form method="post" asp-page-handler="ExportJson">
-                <div class="mb-2 fw-bold">Select Columns</div>
-                <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="checkbox" name="SelectedColumns" value="ClassName" id="col1" />
-                    <label class="form-check-label" for="col1">Class Name</label>
-                </div>
-                <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="checkbox" name="SelectedColumns" value="StudentCount" id="col2" />
-                    <label class="form-check-label" for="col2">Student Count</label>
-                </div>
-                <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="checkbox" name="SelectedColumns" value="Description" id="col3" />
-                    <label class="form-check-label" for="col3">Description</label>
-                </div>
-                <div class="mt-2">
-                    <button type="submit" class="btn btn-success">Export to JSON</button>
-                </div>
+            <!-- Ai Prompt : Listeyi Json Dosyasına Export Nasıl Yaparım -->
+            <form method="post" asp-page-handler="ExportJson" id="exportForm">
+                <input type="hidden" id="selectedColumns" name="SelectedColumns" />
+                <button type="submit" class="btn btn-success mb-2">Export to JSON</button>
             </form>
-
         </div>
     </div>
 
-    
     <div class="row">
         <div class="col-12">
+            
             <h4>Class List</h4>
             <table class="table table-bordered table-striped">
                 <thead class="table-dark">
                     <tr>
-                        <th>Class Name</th>
-                        <th>Student Count</th>
-                        <th>Description</th>
+                        <!-- Ai Prompt Başlıklar tıklanabilir nasıl yapılır -->
+                        <th class="selectable-col" data-col="ClassName" style="cursor:pointer;">Class Name</th>
+                        <th class="selectable-col" data-col="StudentCount" style="cursor:pointer;">Student Count</th>
+                        <th class="selectable-col" data-col="Description" style="cursor:pointer;">Description</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
@@ -86,13 +87,15 @@
                             <td>
                                 <form method="post" class="d-inline">
                                     <input type="hidden" name="id" value="@item.Id" />
-                                    <button type="submit" asp-page-handler="EditSelect" class="btn btn-sm btn-warning" title="Edit">
+                                    <button type="submit" asp-page-handler="EditSelect" class="btn btn-sm btn-warning"
+                                        title="Edit">
                                         <img src="~/images/pencil.svg" alt="Edit" width="16" height="16" />
                                     </button>
                                 </form>
                                 <form method="post" class="d-inline">
                                     <input type="hidden" name="id" value="@item.Id" />
-                                    <button type="submit" asp-page-handler="Delete" class="btn btn-sm btn-danger" title="Delete">
+                                    <button type="submit" asp-page-handler="Delete" class="btn btn-sm btn-danger"
+                                        title="Delete">
                                         <img src="~/images/trash.svg" alt="Delete" width="16" height="16" />
                                     </button>
                                 </form>
@@ -102,9 +105,7 @@
                 </tbody>
             </table>
 
-    <!-- Ai Prompt : Pagination Kısmı Naıl Yapıllır  -->
-
-            <!-- 📄 Pagination -->
+            <!-- Ai Prompt : Pagination Kısmı Naıl Yapıllır  -->
             <nav>
                 <ul class="pagination">
                     @for (int i = 1; i <= Model.TotalPages; i++)
@@ -121,4 +122,25 @@
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
+    <!-- Ai Prompt : Export Kolon Seçimi için Script -->
+    <script>
+        let selectedCols = [];
+        document.querySelectorAll(".selectable-col").forEach(th => {
+            th.addEventListener("click", function () {
+                const col = this.getAttribute("data-col");
+                if (selectedCols.includes(col)) {
+                    selectedCols = selectedCols.filter(x => x !== col);
+                    this.style.backgroundColor = "";
+                    this.style.color = "";
+                } else {
+                    selectedCols.push(col);
+                    this.style.backgroundColor = "#32cd32";
+                    this.style.color = "white";
+                }
+            });
+        });
+        document.getElementById("exportForm").addEventListener("submit", function (e) {
+            document.getElementById("selectedColumns").value = selectedCols.join(",");
+        });
+    </script>
 }
