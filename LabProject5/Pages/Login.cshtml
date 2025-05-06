@@ -4,21 +4,42 @@
     ViewData["Title"] = "Login";
 }
 
-<div class="container mt-5">
-    <h2>Login</h2>
-    <form method="post">
-        <div class="mb-3">
-            <label asp-for="InputUsername" class="form-label">Username</label>
-            <input asp-for="InputUsername" class="form-control" />
-        </div>
-        <div class="mb-3">
-            <label asp-for="InputPassword" class="form-label">Password</label>
-            <input asp-for="InputPassword" class="form-control" type="password" />
-        </div>
-        <button type="submit" class="btn btn-primary">Login</button>
-        @if (!string.IsNullOrEmpty(Model.ErrorMessage))
-        {
-            <div class="alert alert-danger mt-3">@Model.ErrorMessage</div>
-        }
-    </form>
+<style>
+    body {
+        background: linear-gradient(to right, #74ebd5, #acb6e5);
+    }
+
+    .login-card {
+        background-color: #ffffff;
+        border-radius: 15px;
+        padding: 40px 30px;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    }
+
+    .login-title {
+        font-weight: bold;
+        color: #333;
+    }
+</style>
+
+<div class="d-flex justify-content-center align-items-center vh-100">
+    <div class="login-card" style="width: 100%; max-width: 400px;">
+        <h2 class="text-center login-title mb-4">Welcome Back</h2>
+        <form method="post">
+            <div class="mb-3">
+                <label asp-for="InputUsername" class="form-label">Username</label>
+                <input asp-for="InputUsername" class="form-control" placeholder="Enter username" />
+            </div>
+            <div class="mb-3">
+                <label asp-for="InputPassword" class="form-label">Password</label>
+                <input asp-for="InputPassword" class="form-control" type="password" placeholder="Enter password" />
+            </div>
+            <button type="submit" class="btn btn-primary w-100">Login</button>
+
+            @if (!string.IsNullOrEmpty(Model.ErrorMessage))
+            {
+                <div class="alert alert-danger mt-3 text-center">@Model.ErrorMessage</div>
+            }
+        </form>
+    </div>
 </div>

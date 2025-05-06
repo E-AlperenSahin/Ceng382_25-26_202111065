@@ -37,17 +37,26 @@
             <form method="post" asp-page-handler="@(Model.IsEditMode ? "Edit" : "Add")" class="row g-3 mb-3">
                 <input type="hidden" asp-for="ClassInput.Id" />
                 <div class="col-md-4">
-                    <input asp-for="ClassInput.ClassName" class="form-control" placeholder="Class Name" />
-                    <span asp-validation-for="ClassInput.ClassName" class="text-danger"></span>
+                    <input asp-for="ClassInput.Name" class="form-control" placeholder="Class Name" />
+                    <span asp-validation-for="ClassInput.Name" class="text-danger"></span>
                 </div>
                 <div class="col-md-4">
-                    <input asp-for="ClassInput.StudentCount" class="form-control" placeholder="Student Count" />
-                    <span asp-validation-for="ClassInput.StudentCount" class="text-danger"></span>
+                    <input asp-for="ClassInput.PersonCount" class="form-control" placeholder="Person Count" />
+                    <span asp-validation-for="ClassInput.PersonCount" class="text-danger"></span>
                 </div>
                 <div class="col-md-4">
                     <input asp-for="ClassInput.Description" class="form-control" placeholder="Description" />
                     <span asp-validation-for="ClassInput.Description" class="text-danger"></span>
                 </div>
+                <div class="col-md-4">
+                    <select class="form-control" name="ClassInput.IsActive">
+                        <option disabled selected hidden>Is Active?</option>
+                        <option value="true">Yes</option>
+                        <option value="false">No</option>
+                    </select>
+                </div>
+
+
                 <div class="col-12 text-end">
                     <button type="submit" class="btn btn-primary">
                         @(Model.IsEditMode ? "Update Class" : "Add Class")
@@ -65,15 +74,15 @@
 
     <div class="row">
         <div class="col-12">
-            
             <h4>Class List</h4>
             <table class="table table-bordered table-striped">
                 <thead class="table-dark">
                     <tr>
                         <!-- Ai Prompt Başlıklar tıklanabilir nasıl yapılır -->
-                        <th class="selectable-col" data-col="ClassName" style="cursor:pointer;">Class Name</th>
-                        <th class="selectable-col" data-col="StudentCount" style="cursor:pointer;">Student Count</th>
+                        <th class="selectable-col" data-col="Name" style="cursor:pointer;">Class Name</th>
+                        <th class="selectable-col" data-col="PersonCount" style="cursor:pointer;">Person Count</th>
                         <th class="selectable-col" data-col="Description" style="cursor:pointer;">Description</th>
+                        <th class="selectable-col" data-col="IsActive" style="cursor:pointer;">Active?</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
@@ -81,9 +90,10 @@
                     @foreach (var item in Model.FilteredClassList)
                     {
                         <tr>
-                            <td>@item.ClassName</td>
-                            <td>@item.StudentCount</td>
+                            <td>@item.Name</td>
+                            <td>@item.PersonCount</td>
                             <td>@item.Description</td>
+                            <td>@(item.IsActive ? "Yes" : "No")</td>
                             <td>
                                 <form method="post" class="d-inline">
                                     <input type="hidden" name="id" value="@item.Id" />
@@ -139,7 +149,7 @@
                 }
             });
         });
-        document.getElementById("exportForm").addEventListener("submit", function (e) {
+        document.getElementById("exportForm").addEventListener("submit", function () {
             document.getElementById("selectedColumns").value = selectedCols.join(",");
         });
     </script>

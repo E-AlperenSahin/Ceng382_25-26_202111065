@@ -1,14 +1,21 @@
+using LabProject5.Data;
+using Microsoft.EntityFrameworkCore;
+
 var builder = WebApplication.CreateBuilder(args);
 
-//  Add session services
-builder.Services.AddSession();
+// ✅ Gerekli servisleri ekle
+builder.Services.AddDistributedMemoryCache();         // Session için gerekli cache
+builder.Services.AddSession();                        // Session servisi
+builder.Services.AddAuthorization();                  // Authorization middleware'i için gerekli
+builder.Services.AddRazorPages();                     // Razor Pages
 
-// Razor Pages
-builder.Services.AddRazorPages();
+// ✅ DbContext (EF Core ile SQL Server bağlantısı)
+builder.Services.AddDbContext<SchoolDbContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("SchoolDbConnection")));
 
 var app = builder.Build();
 
-//  Exception handler
+// ✅ Middleware pipeline ayarı
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Error");
@@ -16,20 +23,12 @@ if (!app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-
-//  Static files (CSS, JS, vs.)
 app.UseStaticFiles();
 
-//  Routing
 app.UseRouting();
 
-//  Enable session (MIDDLEWARE olarak eklendi)
-app.UseSession();
+app.UseSession();         // 🧠 Session middleware
+app.UseAuthorization();   // 🔐 Authorization middleware
 
-app.UseAuthorization();
-
-//  Razor Pages mapping
-app.MapStaticAssets();
-app.MapRazorPages().WithStaticAssets();
-
+app.MapRazorPages();
 app.Run();

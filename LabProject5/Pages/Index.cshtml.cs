@@ -2,8 +2,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using LabProject5.Models;
 using LabProject5.Helpers;
-using System.Collections.Generic;
-using System.Linq;
+using LabProject5.Data;
+using Microsoft.EntityFrameworkCore;
 using System.Text;
 
 namespace LabProject5.Pages
@@ -11,18 +11,18 @@ namespace LabProject5.Pages
     public class IndexModel : PageModel
     {
         private readonly ILogger<IndexModel> _logger;
+        private readonly SchoolDbContext _context;
 
-        public IndexModel(ILogger<IndexModel> logger)
+        public IndexModel(ILogger<IndexModel> logger, SchoolDbContext context)
         {
             _logger = logger;
+            _context = context;
         }
 
-        public static List<ClassInformationModel> ClassList { get; set; } = new();
+        public IList<Class> FilteredClassList { get; set; } = new List<Class>();
 
         [BindProperty]
-        public ClassInformationModel ClassInput { get; set; } = new();
-
-        public List<ClassInformationTable> FilteredClassList { get; set; } = new();
+        public Class ClassInput { get; set; } = new();
 
         public bool IsEditMode { get; set; } = false;
 
@@ -35,27 +35,7 @@ namespace LabProject5.Pages
         public int PageSize { get; set; } = 10;
         public int TotalPages { get; set; }
 
-        private static bool _isDataGenerated = false;
-
-        private void GenerateDummyData()
-        {
-            if (_isDataGenerated) return;
-
-            var random = new Random();
-            for (int i = 1; i <= 100; i++)
-            {
-                ClassList.Add(new ClassInformationModel
-                {
-                    ClassName = $"Class {i}",
-                    StudentCount = random.Next(10, 100),
-                    Description = $"Sample description {i}"
-                });
-            }
-
-            _isDataGenerated = true;
-        }
-
-        public IActionResult OnGet()
+        public async Task<IActionResult> OnGetAsync()
         {
             // Ai prompt: Giriş Kontrolü Nasıl Yapılır
             var sessionUsername = HttpContext.Session.GetString("username");
@@ -82,111 +62,102 @@ namespace LabProject5.Pages
                 return RedirectToPage("/Login", new { error = "notauthorized" });
             }
 
-            GenerateDummyData();
-
-            var query = ClassList.AsQueryable();
+            var query = _context.Classes.AsQueryable();
 
             if (!string.IsNullOrWhiteSpace(SearchKeyword))
             {
                 query = query.Where(c =>
-                    c.ClassName.Contains(SearchKeyword, StringComparison.OrdinalIgnoreCase) ||
-                    c.Description.Contains(SearchKeyword, StringComparison.OrdinalIgnoreCase));
+                    c.Name.Contains(SearchKeyword) ||
+                    c.Description.Contains(SearchKeyword));
             }
 
-            int totalItems = query.Count();
+            int totalItems = await query.CountAsync();
             TotalPages = (int)Math.Ceiling(totalItems / (double)PageSize);
 
-            FilteredClassList = query
+            FilteredClassList = await query
                 .Skip((PageNumber - 1) * PageSize)
                 .Take(PageSize)
-                .Select(c => new ClassInformationTable
-                {
-                    Id = c.Id,
-                    ClassName = c.ClassName,
-                    StudentCount = c.StudentCount,
-                    Description = c.Description
-                })
-                .ToList();
+                .ToListAsync();
 
             return Page();
         }
 
-        public IActionResult OnPostAdd()
+        public async Task<IActionResult> OnPostAddAsync()
         {
             if (!ModelState.IsValid)
                 return Page();
 
-            ClassList.Add(new ClassInformationModel
-            {
-                ClassName = ClassInput.ClassName,
-                StudentCount = ClassInput.StudentCount,
-                Description = ClassInput.Description
-            });
+            _context.Classes.Add(ClassInput);
+            await _context.SaveChangesAsync();
 
             return RedirectToPage(new { PageNumber, SearchKeyword });
         }
 
-        public IActionResult OnPostEditSelect(int id)
+        public async Task<IActionResult> OnPostEditSelectAsync(int id)
         {
-            var existing = ClassList.FirstOrDefault(c => c.Id == id);
+            var existing = await _context.Classes.FindAsync(id);
             if (existing == null)
                 return RedirectToPage();
 
             ClassInput = existing;
             IsEditMode = true;
-            return Page();
+            return await OnGetAsync();
         }
 
-        public IActionResult OnPostEdit()
+        public async Task<IActionResult> OnPostEditAsync()
         {
-            var existing = ClassList.FirstOrDefault(c => c.Id == ClassInput.Id);
+            var existing = await _context.Classes.FindAsync(ClassInput.Id);
             if (existing != null)
             {
-                existing.ClassName = ClassInput.ClassName;
-                existing.StudentCount = ClassInput.StudentCount;
+                existing.Name = ClassInput.Name;
+                existing.PersonCount = ClassInput.PersonCount;
                 existing.Description = ClassInput.Description;
+                existing.IsActive = ClassInput.IsActive;
+
+                await _context.SaveChangesAsync();
             }
 
             return RedirectToPage(new { PageNumber, SearchKeyword });
         }
 
-        public IActionResult OnPostDelete(int id)
+        public async Task<IActionResult> OnPostDeleteAsync(int id)
         {
-            var item = ClassList.FirstOrDefault(c => c.Id == id);
+            var item = await _context.Classes.FindAsync(id);
             if (item != null)
-                ClassList.Remove(item);
+            {
+                _context.Classes.Remove(item);
+                await _context.SaveChangesAsync();
+            }
 
             return RedirectToPage(new { PageNumber, SearchKeyword });
         }
 
-
-        public IActionResult OnPostExportJson(string SelectedColumns)
+        // Ai prompt: Kolonları Aktif Olarak Nasıl Kullanabilirim
+        public async Task<IActionResult> OnPostExportJsonAsync(string SelectedColumns)
         {
-            // Ai prompt: Kolonları Aktif Olarak Nasıl Kullanıbilirim
             var columns = string.IsNullOrWhiteSpace(SelectedColumns)
                 ? new List<string>()
                 : SelectedColumns.Split(',').ToList();
 
-            var query = ClassList.AsQueryable();
+            var query = _context.Classes.AsQueryable();
 
             if (!string.IsNullOrWhiteSpace(SearchKeyword))
             {
                 query = query.Where(c =>
-                    c.ClassName.Contains(SearchKeyword, StringComparison.OrdinalIgnoreCase) ||
-                    c.Description.Contains(SearchKeyword, StringComparison.OrdinalIgnoreCase));
+                    c.Name.Contains(SearchKeyword) ||
+                    c.Description.Contains(SearchKeyword));
             }
 
-            var dataToExport = query
+            var dataToExport = await query
                 .Skip((PageNumber - 1) * PageSize)
                 .Take(PageSize)
-                .ToList();
+                .ToListAsync();
 
             string json = Utils.Instance.ExportToJson(dataToExport, columns);
             var bytes = Encoding.UTF8.GetBytes(json);
 
             return File(bytes, "application/json", $"current-page-p{PageNumber}.json");
         }
-
 
         // Ai prompt: Logout Bölümü nasıl yaparım
         public IActionResult OnPostLogout()
