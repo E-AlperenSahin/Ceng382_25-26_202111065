@@ -37,7 +37,6 @@ namespace LabProject5.Pages
 
         public async Task<IActionResult> OnGetAsync()
         {
-            // Ai prompt: Giriş Kontrolü Nasıl Yapılır
             var sessionUsername = HttpContext.Session.GetString("username");
             var sessionToken = HttpContext.Session.GetString("token");
             var sessionId = HttpContext.Session.GetString("session_id");
@@ -62,7 +61,9 @@ namespace LabProject5.Pages
                 return RedirectToPage("/Login", new { error = "notauthorized" });
             }
 
-            var query = _context.Classes.AsQueryable();
+            var query = _context.Classes
+                .Where(c => c.IsActive) // sadece aktif olanlar
+                .AsQueryable();
 
             if (!string.IsNullOrWhiteSpace(SearchKeyword))
             {
@@ -87,6 +88,7 @@ namespace LabProject5.Pages
             if (!ModelState.IsValid)
                 return Page();
 
+            ClassInput.IsActive = true; // her yeni kayıt aktif
             _context.Classes.Add(ClassInput);
             await _context.SaveChangesAsync();
 
@@ -112,7 +114,6 @@ namespace LabProject5.Pages
                 existing.Name = ClassInput.Name;
                 existing.PersonCount = ClassInput.PersonCount;
                 existing.Description = ClassInput.Description;
-                existing.IsActive = ClassInput.IsActive;
 
                 await _context.SaveChangesAsync();
             }
@@ -125,21 +126,22 @@ namespace LabProject5.Pages
             var item = await _context.Classes.FindAsync(id);
             if (item != null)
             {
-                _context.Classes.Remove(item);
+                item.IsActive = false; // database'de kalsın ama aktif değil
                 await _context.SaveChangesAsync();
             }
 
             return RedirectToPage(new { PageNumber, SearchKeyword });
         }
 
-        // Ai prompt: Kolonları Aktif Olarak Nasıl Kullanabilirim
         public async Task<IActionResult> OnPostExportJsonAsync(string SelectedColumns)
         {
             var columns = string.IsNullOrWhiteSpace(SelectedColumns)
                 ? new List<string>()
                 : SelectedColumns.Split(',').ToList();
 
-            var query = _context.Classes.AsQueryable();
+            var query = _context.Classes
+                .Where(c => c.IsActive)
+                .AsQueryable();
 
             if (!string.IsNullOrWhiteSpace(SearchKeyword))
             {
@@ -159,7 +161,6 @@ namespace LabProject5.Pages
             return File(bytes, "application/json", $"current-page-p{PageNumber}.json");
         }
 
-        // Ai prompt: Logout Bölümü nasıl yaparım
         public IActionResult OnPostLogout()
         {
             HttpContext.Session.Clear();

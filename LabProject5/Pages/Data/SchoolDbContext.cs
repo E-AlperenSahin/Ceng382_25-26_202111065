@@ -12,5 +12,8 @@ namespace LabProject5.Data
         }
 
         public DbSet<Class> Classes { get; set; }
+
+        public DbSet<Login> Login { get; set; }
+
     }
 }

@@ -1,12 +1,20 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using System.Text.Json;
 using LabProject5.Models;
+using LabProject5.Data; // DbContext için
+using Microsoft.EntityFrameworkCore;
 
 namespace LabProject5.Pages
 {
     public class LoginModel : PageModel
     {
+        private readonly SchoolDbContext _context;
+
+        public LoginModel(SchoolDbContext context)
+        {
+            _context = context;
+        }
+
         [BindProperty]
         public string InputUsername { get; set; } = "";
 
@@ -22,21 +30,16 @@ namespace LabProject5.Pages
 
         public async Task<IActionResult> OnPostAsync()
         {
-            var jsonPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "data", "users.json");
-            if (!System.IO.File.Exists(jsonPath))
+            if (string.IsNullOrWhiteSpace(InputUsername) || string.IsNullOrWhiteSpace(InputPassword))
             {
-                ErrorMessage = "User data file not found.";
+                ErrorMessage = "Please enter username and password.";
                 return Page();
             }
 
-            var json = await System.IO.File.ReadAllTextAsync(jsonPath);
-            var users = JsonSerializer.Deserialize<List<User>>(json);
-
-            var matchedUser = users?.FirstOrDefault(u =>
-                u.Username == InputUsername &&
-                u.Password == InputPassword &&
-                u.IsActive
-            );
+            var matchedUser = await _context.Login
+                .FirstOrDefaultAsync(u =>
+                    u.Username == InputUsername &&
+                    u.Password == InputPassword);
 
             if (matchedUser == null)
             {
@@ -62,7 +65,6 @@ namespace LabProject5.Pages
             Response.Cookies.Append("token", token, options);
             Response.Cookies.Append("session_id", HttpContext.Session.Id, options);
 
-            // ✅ Başarılı giriş → yönlendir
             return RedirectToPage("/Index");
         }
     }

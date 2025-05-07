@@ -12,18 +12,6 @@
       <EndpointProperties><![CDATA[[{"Name":"integrity","Value":"sha256-j6fhJSuuyLpOSLuPJU0TsDV0iNjor5S3rDnvxJrt4bg="}]]]></EndpointProperties>
       <ResponseHeaders><![CDATA[[{"Name":"Accept-Ranges","Value":"bytes"},{"Name":"Cache-Control","Value":"no-cache"},{"Name":"Content-Length","Value":"667"},{"Name":"Content-Type","Value":"text/css"},{"Name":"ETag","Value":"\u0022j6fhJSuuyLpOSLuPJU0TsDV0iNjor5S3rDnvxJrt4bg=\u0022"},{"Name":"Last-Modified","Value":"Wed, 26 Mar 2025 10:53:38 GMT"}]]]></ResponseHeaders>
     </StaticWebAssetEndpoint>
-    <StaticWebAssetEndpoint Include="_content/LabProject5/data/users.json">
-      <AssetFile>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\data\users.json'))</AssetFile>
-      <Selectors><![CDATA[[]]]></Selectors>
-      <EndpointProperties><![CDATA[[{"Name":"integrity","Value":"sha256-dwAkO5pFjPzYrvGrHe0qgC6T5BJFf9lR5MXA9gnGg2E="}]]]></EndpointProperties>
-      <ResponseHeaders><![CDATA[[{"Name":"Accept-Ranges","Value":"bytes"},{"Name":"Cache-Control","Value":"no-cache"},{"Name":"Content-Length","Value":"299"},{"Name":"Content-Type","Value":"application/json"},{"Name":"ETag","Value":"\u0022dwAkO5pFjPzYrvGrHe0qgC6T5BJFf9lR5MXA9gnGg2E=\u0022"},{"Name":"Last-Modified","Value":"Wed, 16 Apr 2025 11:34:51 GMT"}]]]></ResponseHeaders>
-    </StaticWebAssetEndpoint>
-    <StaticWebAssetEndpoint Include="_content/LabProject5/data/users.xuj0vz3qd8.json">
-      <AssetFile>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\data\users.json'))</AssetFile>
-      <Selectors><![CDATA[[]]]></Selectors>
-      <EndpointProperties><![CDATA[[{"Name":"fingerprint","Value":"xuj0vz3qd8"},{"Name":"integrity","Value":"sha256-dwAkO5pFjPzYrvGrHe0qgC6T5BJFf9lR5MXA9gnGg2E="},{"Name":"label","Value":"_content/LabProject5/data/users.json"}]]]></EndpointProperties>
-      <ResponseHeaders><![CDATA[[{"Name":"Accept-Ranges","Value":"bytes"},{"Name":"Cache-Control","Value":"max-age=31536000, immutable"},{"Name":"Content-Length","Value":"299"},{"Name":"Content-Type","Value":"application/json"},{"Name":"ETag","Value":"\u0022dwAkO5pFjPzYrvGrHe0qgC6T5BJFf9lR5MXA9gnGg2E=\u0022"},{"Name":"Last-Modified","Value":"Wed, 16 Apr 2025 11:34:51 GMT"}]]]></ResponseHeaders>
-    </StaticWebAssetEndpoint>
     <StaticWebAssetEndpoint Include="_content/LabProject5/favicon.61n19gt1b8.ico">
       <AssetFile>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\favicon.ico'))</AssetFile>
       <Selectors><![CDATA[[]]]></Selectors>
